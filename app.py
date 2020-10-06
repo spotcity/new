@@ -14,7 +14,7 @@ except KeyError as e:
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return 'Hello, World1111!'
 
 @app.route('/flask_config')
 def flask_config():
@@ -22,5 +22,4 @@ def flask_config():
 
 
 if __name__ == '__main__':
-    app.run()
-
+    app.run(host='0.0.0.0')
