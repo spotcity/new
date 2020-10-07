@@ -2,6 +2,7 @@
 class Config(object):
     DB_HOST = 'db'
     FLASK_HTPASSWD_PATH = '/secret/.htpasswd'
+    # generate with something like python -c 'import os; print(os.urandom(16))'
     SECRET_KEY = 'secret'
     FLASK_SECRET = SECRET_KEY
 
