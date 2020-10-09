@@ -3,12 +3,13 @@ import logging
 import json
 
 import flask
+from flask_migrate import Migrate
 
 from reviews.views import reviews
 from roles.views import roles
 from spots.views import spots
 from users.views import users
-
+from models import db
 
 def create_app():
     app = flask.Flask(__name__)
@@ -20,6 +21,9 @@ def create_app():
         logging.error('Unknown environment key, defaulting to Development')
         env = 'DevelopmentConfig'
         app.config.from_object('config.%s' % env)
+
+    db.init_app(app)
+    migrate = Migrate(app, db)
 
     app.register_blueprint(reviews, url_prefix='/reviews')
     app.register_blueprint(roles, url_prefix='/roles')

@@ -4,6 +4,8 @@ class Config(object):
     FLASK_HTPASSWD_PATH = '/secret/.htpasswd'
     SECRET_KEY = 'secret'
     FLASK_SECRET = SECRET_KEY
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///data/base.db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
     ENV = 'development'
