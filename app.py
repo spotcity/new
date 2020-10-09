@@ -1,8 +1,12 @@
 import os
 import logging
 import json
+
 from flask import Flask
+
+
 app = Flask(__name__)
+
 
 # Select config
 try:
@@ -12,9 +16,11 @@ except KeyError as e:
     env = 'DevelopmentConfig'
     app.config.from_object('config.%s' % env)
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World1111!'
+
+@app.route('/handshake')
+def handshake():
+    return {'hand': 'shake'}
+
 
 @app.route('/flask_config')
 def flask_config():
@@ -22,4 +28,4 @@ def flask_config():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run()
