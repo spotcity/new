@@ -2,30 +2,32 @@ import os
 import logging
 import json
 
-from flask import Flask
+import flask
+
+from reviews.views import reviews
+from roles.views import roles
+from spots.views import spots
+from users.views import users
 
 
-app = Flask(__name__)
+def create_app():
+    app = flask.Flask(__name__)
 
+    # Select config
+    try:
+        env = os.environ['APP_ENV']
+    except KeyError:
+        logging.error('Unknown environment key, defaulting to Development')
+        env = 'DevelopmentConfig'
+        app.config.from_object('config.%s' % env)
 
-# Select config
-try:
-    env = os.environ['APP_ENV']
-except KeyError as e:
-    logging.error('Unknown environment key, defaulting to Development')
-    env = 'DevelopmentConfig'
-    app.config.from_object('config.%s' % env)
-
-
-@app.route('/handshake')
-def handshake():
-    return {'hand': 'shake'}
-
-
-@app.route('/flask_config')
-def flask_config():
-    return json.dumps(app.config, indent=4, sort_keys=True, default=str)
+    app.register_blueprint(reviews, url_prefix='/reviews')
+    app.register_blueprint(roles, url_prefix='/roles')
+    app.register_blueprint(spots, url_prefix='/spots')
+    app.register_blueprint(users, url_prefix='/users')
+    
+    return app
 
 
 if __name__ == '__main__':
-    app.run()
+    create_app().run()
