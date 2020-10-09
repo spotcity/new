@@ -29,9 +29,12 @@ def create_app():
     app.register_blueprint(roles, url_prefix='/roles')
     app.register_blueprint(spots, url_prefix='/spots')
     app.register_blueprint(users, url_prefix='/users')
-    
+
     return app
 
 
 if __name__ == '__main__':
-    create_app().run()
+    create_app().run(host='0.0.0.0')
+else:
+    # TODO: select config for gunicorn
+    app = create_app()
