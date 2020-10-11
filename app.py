@@ -1,25 +1,40 @@
 import os
 import logging
 import json
-from flask import Flask
-app = Flask(__name__)
 
-# Select config
-try:
-    env = os.environ['APP_ENV']
-except KeyError as e:
-    logging.error('Unknown environment key, defaulting to Development')
-    env = 'DevelopmentConfig'
-    app.config.from_object('config.%s' % env)
+import flask
+from flask_migrate import Migrate
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World1111!'
+from reviews.views import reviews
+from roles.views import roles
+from spots.views import spots
+from users.views import users
+from models import db
 
-@app.route('/flask_config')
-def flask_config():
-    return json.dumps(app.config, indent=4, sort_keys=True, default=str)
+def create_app():
+    app = flask.Flask(__name__)
+
+    # Select config
+    try:
+        env = os.environ['APP_ENV']
+    except KeyError:
+        logging.error('Unknown environment key, defaulting to Development')
+        env = 'DevelopmentConfig'
+        app.config.from_object('config.%s' % env)
+
+    db.init_app(app)
+    migrate = Migrate(app, db)
+
+    app.register_blueprint(reviews, url_prefix='/reviews')
+    app.register_blueprint(roles, url_prefix='/roles')
+    app.register_blueprint(spots, url_prefix='/spots')
+    app.register_blueprint(users, url_prefix='/users')
+
+    return app
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    create_app().run(host='0.0.0.0')
+else:
+    # TODO: select config for gunicorn
+    app = create_app()
