@@ -1,14 +1,14 @@
-# back
+# api
 
 ## Quick start
 ```bash
-docker build -t spotcity/back:latest .
+docker build -t spotcity/api:latest .
 
 # run with code reload
-docker run -p=5000:5000 -v "$PWD":/app --rm --name spotcity_back spotcity/back:latest
+docker run -p=5000:5000 -v "$PWD":/app --rm --name spotcity_api spotcity/api:latest
 
 # run standalone
-docker run -d -p=5000:5000 --rm --name spotcity_back spotcity/back:latest
+docker run -d -p=5000:5000 --rm --name spotcity_api spotcity/api:latest
 
 # gunicorn cmd
 gunicorn --bind 0.0.0.0:5000 app:app
