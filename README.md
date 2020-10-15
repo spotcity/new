@@ -3,20 +3,23 @@
 ![frontend](https://github.com/spotcity/spotcity/workflows/frontend/badge.svg)
 ![api](https://github.com/spotcity/spotcity/workflows/api/badge.svg)
 
+
 ## dev environment
-```bash
-https://spotcity.n3tdom.com/
-https://spotcity.n3tdom.com/api/spots/handshake/
-# infra
-https://lb.spotcity.n3tdom.com/
+- https://spotcity.n3tdom.com/
+- https://spotcity.n3tdom.com/api/spots/handshake/
+- https://lb.spotcity.n3tdom.com/
 
-```
 
-## local environment (TODO:)
+## local environment:
+- localhost
+- localhost/api
+- localhost:8080
+
 ```bash
-docker-compose up -d
-http://127.0.0.1:80
-http://127.0.0.1:8000
-http://127.0.0.1:5000
+# 1. Create Personal Access Token https://github.com/settings/tokens
+# 2. Login
+docker login https://ghcr.io -u $github_user
+# 3. Run
+docker-compose -f docker-compose.dev.yml up -d
 
 ```
