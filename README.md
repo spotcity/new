@@ -1,31 +1,22 @@
-# api
+# spotcity
+![infra](https://github.com/spotcity/spotcity/workflows/infra/badge.svg)
+![frontend](https://github.com/spotcity/spotcity/workflows/frontend/badge.svg)
+![api](https://github.com/spotcity/spotcity/workflows/api/badge.svg)
 
-## Quick start
+## dev environment
 ```bash
-docker build -t spotcity/api:latest .
-
-# run with code reload
-docker run -p=5000:5000 -v "$PWD":/app --rm --name spotcity_api spotcity/api:latest
-
-# run standalone
-docker run -d -p=5000:5000 --rm --name spotcity_api spotcity/api:latest
-
-# gunicorn cmd
-gunicorn --bind 0.0.0.0:5000 app:app
+https://spotcity.n3tdom.com/
+https://spotcity.n3tdom.com/api/spots/handshake/
+# infra
+https://lb.spotcity.n3tdom.com/
 
 ```
 
-## Shell launch
+## local environment (TODO:)
 ```bash
-python3 -m venv python3
-. python3/bin/activate
-pip install -r requirements.txt
-
-# run dev
-python3 app.py
-
-# run prod
-export APP_ENV=ProductionConfig
-python3 app.py
+docker-compose up -d
+http://127.0.0.1:80
+http://127.0.0.1:8000
+http://127.0.0.1:5000
 
 ```

@@ -1,0 +1,34 @@
+name: infra
+
+# Run when detected changes are outside of /api, /frontend
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'api/**'
+      - 'frontend/**'
+      - 'README.md'
+
+env:
+  IMAGE_NAME: "traefik"
+
+jobs:
+  # Update infra
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Pull and recreate
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PROD_SSH_HOST }}
+          username: ${{ secrets.PROD_SSH_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          envs: IMAGE_NAME
+          script: |
+            cd spotcity
+            git pull
+            touch acme.json
+            chmod 600 acme.json
+            docker-compose up -d $IMAGE_NAME
