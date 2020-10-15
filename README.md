@@ -15,11 +15,14 @@
 - localhost/api
 - localhost:8080
 
-```bash
-# 1. Create Personal Access Token https://github.com/settings/tokens, scope repo, write:packages
-# 2. Login
-docker login https://ghcr.io -u $github_user
-# 3. Run
-docker-compose -f docker-compose.dev.yml up -d
 
+### Quick start
+1. Create [Personal Access Token](https://github.com/settings/tokens) with scope "repo, write:packages".
+2. Login
+```bash
+docker login https://ghcr.io -u $github_user
+```
+3. Run
+```bash
+docker-compose -f docker-compose.dev.yml up -d
 ```
