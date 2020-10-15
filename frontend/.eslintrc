@@ -1,0 +1,19 @@
+{
+  "extends": ["react-app", "plugin:prettier/recommended", "prettier/react"],
+  "rules": {
+    "import/no-default-export": 1,
+    "prettier/prettier": [
+      1,
+      {
+        "useTabs": false,
+        "tabWidth": 2,
+        "singleQuote": true,
+        "semi": false,
+        "printWidth": 120,
+        "trailingComma": "all",
+        "arrowParens": "avoid"
+      }
+    ],
+    "react/self-closing-comp": 1
+  }
+}
