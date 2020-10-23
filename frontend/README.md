@@ -1,3 +1,18 @@
+# frontend
+
+## Quick start
+```bash
+# local env (WIP)
+docker build -t spotcity/front:local .
+docker rm -f spotcity_front; docker run -p=80:80 -v "$PWD":/app --name spotcity_front spotcity/front:local
+
+# standalone env
+docker rm -f spotcity_front; docker run -d -p=80:80 --name spotcity_front spotcity/front:local
+
+```
+
+
+------------------------
 # Getting started
 
 ## Prerequisites:
@@ -35,12 +50,3 @@ Run ESLint check.
 ### `npm run check-ts`
 
 Run TypeScript check.
-
-## Quick start
-```bash
-docker build -t spotcity/front:latest .
-
-# run standalone
-docker run -d -p=80:80 --rm --name spotcity_front spotcity/front:latest
-
-```
