@@ -16,12 +16,5 @@ docker rm -f spotcity_api; docker run -d -p=8000:8000 --name spotcity_api spotci
 python3 -m venv python3
 . python3/bin/activate
 pip install -r requirements.txt
-
-# run dev
-python3 app.py
-
-# run prod
-export APP_ENV=ProductionConfig
-python3 app.py
-
+uvicorn app:app --host 0.0.0.0 --reload
 ```
