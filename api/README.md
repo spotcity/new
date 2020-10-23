@@ -14,7 +14,7 @@ docker rm -f spotcity_api; docker run -d -p=8000:8000 --name spotcity_api spotci
 ## Shell launch
 ```bash
 python3 -m venv python3
-. python3/bin/activate
+source python3/bin/activate
 pip install -r requirements.txt
 uvicorn app:app --host 0.0.0.0 --reload
 ```
