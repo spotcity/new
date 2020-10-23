@@ -1,40 +1,36 @@
-import os
-import logging
-import json
+from typing import Optional
 
-import flask
-from flask_migrate import Migrate
+from fastapi import FastAPI
+from pydantic import BaseModel
 
-from reviews.views import reviews
-from roles.views import roles
-from spots.views import spots
-from users.views import users
-from models import db
-
-def create_app():
-    app = flask.Flask(__name__)
-
-    # Select config
-    try:
-        env = os.environ['APP_ENV']
-    except KeyError:
-        logging.error('Unknown environment key, defaulting to Development')
-        env = 'DevelopmentConfig'
-        app.config.from_object('config.%s' % env)
-
-    db.init_app(app)
-    migrate = Migrate(app, db)
-
-    app.register_blueprint(reviews, url_prefix='/reviews')
-    app.register_blueprint(roles, url_prefix='/roles')
-    app.register_blueprint(spots, url_prefix='/spots')
-    app.register_blueprint(users, url_prefix='/users')
-
-    return app
+app = FastAPI()
 
 
-if __name__ == '__main__':
-    create_app().run(host='0.0.0.0')
-else:
-    # TODO: select config for gunicorn
-    app = create_app()
+class Item(BaseModel):
+    name: str
+    price: float
+    is_offer: Optional[bool] = None
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Foo",
+                "price": 35.4,
+                "is_offer": True,
+            }
+        }
+
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: Optional[str] = None):
+    return {"item_id": item_id, "q": q}
+
+
+@app.put("/items/{item_id}")
+def update_item(item_id: int, item: Item):
+    return {"item_name": item.name, "item_id": item_id}

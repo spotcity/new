@@ -1,6 +1,8 @@
-FROM python:3-alpine
-ADD . /app
+FROM python:3.8-alpine
 WORKDIR app
-RUN apk update && apk add bash curl nano
+COPY requirements.txt /app/
 RUN pip install -r requirements.txt
-CMD [ "python", "./app.py" ]
+ADD . /app
+# lazy debug
+RUN apk update && apk add bash curl nano
+CMD [ "uvicorn", "app:app", "--host", "0.0.0.0", "--reload" ]
