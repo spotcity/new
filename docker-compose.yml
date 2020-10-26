@@ -61,7 +61,7 @@ services:
       - "traefik.http.middlewares.stripapi.stripprefix.prefixes=/api"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.middlewares=stripapi@docker"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.tls.certresolver=le"
-      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-api.loadbalancer.server.port=5000"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-api.loadbalancer.server.port=${API_PORT}"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.entrypoints=websecure"
 
 networks:
