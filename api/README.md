@@ -2,30 +2,19 @@
 
 ## Quick start
 ```bash
-docker build -t spotcity/api:latest .
+# local env
+docker build -t spotcity/api:local .
+docker rm -f spotcity_api; docker run -p=8000:8000 -v "$PWD":/app --name spotcity_api spotcity/api:local
 
-# run with code reload
-docker run -p=5000:5000 -v "$PWD":/app --rm --name spotcity_api spotcity/api:latest
-
-# run standalone
-docker run -d -p=5000:5000 --rm --name spotcity_api spotcity/api:latest
-
-# gunicorn cmd
-gunicorn --bind 0.0.0.0:5000 app:app
+# standalone env
+docker rm -f spotcity_api; docker run -d -p=8000:8000 --name spotcity_api spotcity/api:local
 
 ```
 
 ## Shell launch
 ```bash
 python3 -m venv python3
-. python3/bin/activate
+source python3/bin/activate
 pip install -r requirements.txt
-
-# run dev
-python3 app.py
-
-# run prod
-export APP_ENV=ProductionConfig
-python3 app.py
-
+uvicorn app:app --host 0.0.0.0 --reload
 ```

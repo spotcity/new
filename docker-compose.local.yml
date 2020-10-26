@@ -1,0 +1,71 @@
+version: '3.3'
+
+services:
+  proxy:
+    image: traefik:v2.3
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - ext
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker=true
+      - --api
+      # metrics
+      - --metrics.prometheus.buckets=0.100000, 0.300000, 1.200000, 5.000000
+      - --entryPoints.metrics.address=:8082
+      - --metrics.prometheus.entryPoint=metrics
+      - --metrics.prometheus.addEntryPointsLabels=true
+      - --metrics.prometheus.addServicesLabels=true
+    labels:
+      # dashboard
+      - "traefik.http.routers.traefik.rule=Host(`lb.localhost`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=admin"
+      - "traefik.http.middlewares.admin.basicauth.users=dev:$$apr1$$d39ozBX8$$Q47EfEq9ZdD859hJuDORX."
+
+  frontend:
+    image: ${COMPOSE_PROJECT_NAME}/frontend:local
+    restart: unless-stopped
+    networks:
+      - ext
+    labels:
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.rule=Host(`localhost`)"
+    # local env
+    ports:
+      - "${FRONTEND_PORT}:80"
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: build
+    entrypoint: ["npm", "run", "start"]
+    volumes:
+      - "./frontend:/app"
+      - "/app/node_modules"
+    # fight npm dementia..
+    stdin_open: true
+
+  api:
+    image: ${COMPOSE_PROJECT_NAME}/api:local
+    restart: unless-stopped
+    networks:
+      - ext
+    labels:
+      # serve /api & strip /api
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.rule=Host(`localhost`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))"
+      - "traefik.http.middlewares.stripapi.stripprefix.prefixes=/api"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.middlewares=stripapi@docker"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-api.loadbalancer.server.port=${API_PORT}"
+    # build & live reload
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    build: ./api
+    entrypoint: [ "uvicorn", "app:app", "--host", "0.0.0.0", "--reload" ]
+    volumes:
+      - "./api:/app"
+
+networks:
+  ext:
