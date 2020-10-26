@@ -1,7 +1,7 @@
 version: '3.3'
 
 services:
-  traefik:
+  proxy:
     image: traefik:v2.3
     restart: unless-stopped
     ports:
@@ -28,41 +28,41 @@ services:
       - --metrics.prometheus.addServicesLabels=true
     labels:
       # dashboard
-      - "traefik.http.routers.traefik.rule=Host(`lb.spotcity.n3tdom.com`)"
+      - "traefik.http.routers.traefik.rule=Host(`lb.${COMPOSE_PROJECT_NAME}.n3tdom.com`)"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=admin"
       - "traefik.http.routers.traefik.tls.certresolver=le"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.middlewares.admin.basicauth.users=dev:$$apr1$$d39ozBX8$$Q47EfEq9ZdD859hJuDORX."
-      # global redirect to https
+      # redirect to https
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-      # middleware redirect
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   frontend:
-    image: ghcr.io/spotcity/front:${image_tag}
+    image: ghcr.io/${COMPOSE_PROJECT_NAME}/front:${image_tag}
     restart: unless-stopped
     networks:
       - ext
     labels:
-      - "traefik.http.routers.spotcity-front.rule=Host(`spotcity.n3tdom.com`)"
-      - "traefik.http.routers.spotcity-front.tls.certresolver=le"
-      - "traefik.http.routers.spotcity-front.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.rule=Host(`${COMPOSE_PROJECT_NAME}.n3tdom.com`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.tls.certresolver=le"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.entrypoints=websecure"
 
   api:
-    image: ghcr.io/spotcity/api:${image_tag}
+    image: ghcr.io/${COMPOSE_PROJECT_NAME}/api:${image_tag}
     restart: unless-stopped
     networks:
       - ext
     labels:
-      - "traefik.http.routers.spotcity-api.rule=Host(`spotcity.n3tdom.com`) && PathPrefix(`/api`)"
+      # serve /api & strip /api
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.rule=Host(`localhost`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))"
       - "traefik.http.middlewares.stripapi.stripprefix.prefixes=/api"
-      - "traefik.http.routers.spotcity-api.middlewares=stripapi@docker"
-      - "traefik.http.routers.spotcity-api.tls.certresolver=le"
-      - "traefik.http.services.spotcity-api.loadbalancer.server.port=5000"
-      - "traefik.http.routers.spotcity-api.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.middlewares=stripapi@docker"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.tls.certresolver=le"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-api.loadbalancer.server.port=5000"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.entrypoints=websecure"
 
 networks:
   ext:

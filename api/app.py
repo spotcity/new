@@ -1,40 +1,50 @@
-import os
-import logging
-import json
+from typing import Optional
+from fastapi import FastAPI, Request
+from pydantic import BaseModel
 
-import flask
-from flask_migrate import Migrate
+app = FastAPI()
+app = FastAPI(root_path="/api")
 
-from reviews.views import reviews
-from roles.views import roles
-from spots.views import spots
-from users.views import users
-from models import db
+class Item(BaseModel):
+    name: str
+    price: float
+    is_offer: Optional[bool] = None
 
-def create_app():
-    app = flask.Flask(__name__)
-
-    # Select config
-    try:
-        env = os.environ['APP_ENV']
-    except KeyError:
-        logging.error('Unknown environment key, defaulting to Development')
-        env = 'DevelopmentConfig'
-        app.config.from_object('config.%s' % env)
-
-    db.init_app(app)
-    migrate = Migrate(app, db)
-
-    app.register_blueprint(reviews, url_prefix='/reviews')
-    app.register_blueprint(roles, url_prefix='/roles')
-    app.register_blueprint(spots, url_prefix='/spots')
-    app.register_blueprint(users, url_prefix='/users')
-
-    return app
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Foo",
+                "price": 35.4,
+                "is_offer": True,
+            }
+        }
 
 
-if __name__ == '__main__':
-    create_app().run(host='0.0.0.0')
-else:
-    # TODO: select config for gunicorn
-    app = create_app()
+@app.get("/")
+def read_root(request: Request):
+    return {"message": "Hello World", "root_path": request.scope.get("root_path")}
+
+# emulate flask stubs
+@app.get("/spots/handshake")
+def handshake():
+    return {"fastapi": "handshake"}
+
+@app.post("/spots/get/")
+def getall():
+    return {
+        "error": {
+            "id": 0
+        },
+        "spots": [
+            {
+                "geo": "6666.666, 9999.6666",
+                "id": 1,
+                "name": "aaa"
+            },
+            {
+                "geo": "777.8888, 5555.6666",
+                "id": 2,
+                "name": "bbb"
+            }
+        ]
+    }

@@ -1,13 +1,24 @@
-FROM node:14-alpine as builder
+FROM node:14-alpine as build
+WORKDIR /app
+COPY package*.json /app/
+RUN npm install
+COPY ./ /app/
+RUN npm run build
+
+FROM nginx:1.19-alpine
+WORKDIR /app
+COPY ./.ci/nginx.conf /etc/nginx/
+COPY --from=build /app/build/ /app/
+
+# lazy debug
+RUN apk update && apk add bash curl nano
+
+# TEST
+#RUN npm run test:unit
+
+# SENTRY
 # ARG REACT_APP_SENTRY_DSN
 # ENV REACT_APP_SENTRY_DSN=$REACT_APP_SENTRY_DSN
-
-RUN mkdir /app
-WORKDIR /app
-COPY . /app/
-
-RUN npm install
-RUN npm run build
 
 ## SELECT BUILD TYPE
 #USAGE: docker build -t my_docker . --build-arg build_env=prod
@@ -18,11 +29,3 @@ RUN npm run build
 # prod
 #RUN if [ "$build_env" = "prod" ] ; then npm run build && echo ">> Building prod"; else echo "" ; fi
 ##
-
-FROM nginx:1.19-alpine
-RUN mkdir /app
-RUN apk update && apk add bash curl nano
-COPY ./.ci/nginx.conf /etc/nginx/
-COPY --from=builder /app/build/ /app/
-
-#COPY ./build_info.txt /app/
