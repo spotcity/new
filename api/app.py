@@ -1,9 +1,9 @@
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 
 app = FastAPI()
-
+app = FastAPI(root_path="/api")
 
 class Item(BaseModel):
     name: str
@@ -21,15 +21,30 @@ class Item(BaseModel):
 
 
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
+def read_root(request: Request):
+    return {"message": "Hello World", "root_path": request.scope.get("root_path")}
 
+# emulate flask stubs
+@app.get("/spots/handshake")
+def handshake():
+    return {"fastapi": "handshake"}
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
-
-
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
+@app.post("/spots/get/")
+def getall():
+    return {
+        "error": {
+            "id": 0
+        },
+        "spots": [
+            {
+                "geo": "6666.666, 9999.6666",
+                "id": 1,
+                "name": "aaa"
+            },
+            {
+                "geo": "777.8888, 5555.6666",
+                "id": 2,
+                "name": "bbb"
+            }
+        ]
+    }

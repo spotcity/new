@@ -1,7 +1,7 @@
 version: '3.3'
 
 services:
-  traefik:
+  proxy:
     image: traefik:v2.3
     restart: unless-stopped
     ports:
@@ -34,11 +34,10 @@ services:
       - "traefik.http.routers.traefik.tls.certresolver=le"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.middlewares.admin.basicauth.users=dev:$$apr1$$d39ozBX8$$Q47EfEq9ZdD859hJuDORX."
-      # global redirect to https
+      # redirect to https
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-      # middleware redirect
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   frontend:
@@ -57,6 +56,7 @@ services:
     networks:
       - ext
     labels:
+      # serve /api & strip /api
       - "traefik.http.routers.spotcity-api.rule=Host(`spotcity.n3tdom.com`) && PathPrefix(`/api`)"
       - "traefik.http.middlewares.stripapi.stripprefix.prefixes=/api"
       - "traefik.http.routers.spotcity-api.middlewares=stripapi@docker"

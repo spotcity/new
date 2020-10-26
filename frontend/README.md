@@ -3,11 +3,11 @@
 ## Quick start
 ```bash
 # local env (WIP)
-docker build -t spotcity/front:local .
-docker rm -f spotcity_front; docker run -p=80:80 -v "$PWD":/app --name spotcity_front spotcity/front:local
+docker build -t spotcity/frontend:local .
+docker rm -f spotcity_frontend; docker run -p=80:80 -v "$PWD":/app --name spotcity_frontend spotcity/frontend:local
 
 # standalone env
-docker rm -f spotcity_front; docker run -d -p=80:80 --name spotcity_front spotcity/front:local
+docker rm -f spotcity_frontend; docker run -d -p=80:80 --name spotcity_frontend spotcity/frontend:local
 
 ```
 
