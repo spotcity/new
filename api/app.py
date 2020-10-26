@@ -22,7 +22,7 @@ class Item(BaseModel):
 
 @app.get("/")
 def read_root(request: Request):
-    return {"message": "Hello World", "root_path": request.scope.get("root_path")}
+    return {"message": "Hello World!", "root_path": request.scope.get("root_path")}
 
 # emulate flask stubs
 @app.get("/spots/handshake")
