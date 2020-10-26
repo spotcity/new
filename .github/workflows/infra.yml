@@ -10,7 +10,7 @@ on:
       - 'README.md'
 
 env:
-  IMAGE_NAME: "traefik"
+  IMAGE_NAME: ""
 
 jobs:
   # Update infra
