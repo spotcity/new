@@ -46,7 +46,7 @@ services:
     networks:
       - ext
     labels:
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.rule=Host(`${COMPOSE_PROJECT_NAME}.n3tdom.com`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.rule=Host(`${PROJECT_FQDN}`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.tls.certresolver=le"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.entrypoints=websecure"
 
@@ -57,7 +57,7 @@ services:
       - ext
     labels:
       # serve /api & strip /api
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.rule=Host(`localhost`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.rule=Host(`${PROJECT_FQDN}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))"
       - "traefik.http.middlewares.stripapi.stripprefix.prefixes=/api"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.middlewares=stripapi@docker"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.tls.certresolver=le"
