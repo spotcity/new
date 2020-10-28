@@ -7,6 +7,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      #- "8082:8082"
     networks:
       - ext
     volumes:
@@ -15,8 +16,13 @@ services:
     command:
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
+      # general
       - --providers.docker=true
       - --api
+      - --accesslog
+      - --log
+      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${TRAEFIK_TAG?Variable not set}`)
+      # lels
       - --certificatesresolvers.le.acme.email=admin@n3tdom.com
       - --certificatesresolvers.le.acme.storage=/acme.json
       - --certificatesresolvers.le.acme.tlschallenge=true
@@ -27,6 +33,7 @@ services:
       - --metrics.prometheus.addEntryPointsLabels=true
       - --metrics.prometheus.addServicesLabels=true
     labels:
+      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
       # dashboard
       - "traefik.http.routers.traefik.rule=Host(`lb.${COMPOSE_PROJECT_NAME}.n3tdom.com`)"
       - "traefik.http.routers.traefik.service=api@internal"
@@ -41,28 +48,30 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   frontend:
-    image: ghcr.io/${COMPOSE_PROJECT_NAME}/front:${image_tag}
+    image: ghcr.io/${COMPOSE_PROJECT_NAME}/front:${IMAGE_TAG}
     restart: unless-stopped
     networks:
       - ext
     labels:
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.rule=Host(`${PROJECT_FQDN}`)"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.tls.certresolver=le"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.entrypoints=websecure"
+      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.rule=Host(`${PROJECT_FQDN}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.tls.certresolver=le
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.entrypoints=websecure
 
   api:
-    image: ghcr.io/${COMPOSE_PROJECT_NAME}/api:${image_tag}
+    image: ghcr.io/${COMPOSE_PROJECT_NAME}/api:${IMAGE_TAG}
     restart: unless-stopped
     networks:
       - ext
     labels:
+      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
       # serve /api & strip /api
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.rule=Host(`${PROJECT_FQDN}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))"
-      - "traefik.http.middlewares.stripapi.stripprefix.prefixes=/api"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.middlewares=stripapi@docker"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.tls.certresolver=le"
-      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-api.loadbalancer.server.port=${API_PORT}"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.entrypoints=websecure"
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.rule=Host(`${PROJECT_FQDN}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))
+      - traefik.http.middlewares.stripapi.stripprefix.prefixes=/api
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.middlewares=stripapi@docker
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.tls.certresolver=le
+      - traefik.http.services.${COMPOSE_PROJECT_NAME}-api.loadbalancer.server.port=${API_PORT}
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.entrypoints=websecure
 
 networks:
   ext:
