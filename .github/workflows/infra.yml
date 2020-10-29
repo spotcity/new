@@ -10,7 +10,7 @@ on:
       - 'README.md'
 
 env:
-  IMAGE_NAME: ""
+  IMAGE_NAME: "proxy"
 
 jobs:
   # Update infra
@@ -31,4 +31,5 @@ jobs:
             git pull
             touch acme.json
             chmod 600 acme.json
+            docker-compose pull $IMAGE_NAME
             docker-compose up -d $IMAGE_NAME
