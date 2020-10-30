@@ -19,9 +19,12 @@
 
 ## host config:
 ```bash
-yum update
-install common-tools
-install docker + docker compose
+yum update -y; yum install -y nano git socat httpd-tools epel-release yum-utils
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum install -y docker-ce docker-ce-cli containerd.io
+systemctl start docker && systemctl enable docker
+curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
 # login with token
 docker login https://ghcr.io -u $user --password-stdin
 
