@@ -1,58 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
-type TSpot = {
-  geo?: string
-  id: number
-  name?: string
-}
+import { Typography } from 'components'
+import { SpotsMap } from 'features/spots'
 
-type TResponse = {
-  spots: TSpot[]
-}
-
-const getSpots = async () =>
-  fetch('/api/spots/get/', {
-    method: 'POST',
-    body: JSON.stringify({}),
-    headers: { 'Content-Type': 'application/json' },
-  })
-    .then(v => v.json() as Promise<TResponse>)
-    .then(v => v.spots)
-
-export const App = () => {
-  const [spots, setSpots] = useState<TSpot[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string>()
-
-  const fetchSpots = async () => {
-    try {
-      const newSpots = await getSpots()
-      setSpots(newSpots)
-    } catch (e) {
-      setError('Something went wrong')
-      setSpots([])
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchSpots()
-  }, [])
-
-  const loadingPlaceholder = isLoading ? 'Loading...' : error
-
-  return (
-    <>
-      <h1>spots: {loadingPlaceholder}</h1>
-      {spots.map(({ id, geo, name }) => (
-        <div key={id}>
-          <div>id: {id}</div>
-          <div>name: {name}</div>
-          <div>geo: {geo}</div>
-          <hr />
-        </div>
-      ))}
-    </>
-  )
-}
+// TODO: Box/Flex containers
+export const App = () => (
+  <>
+    <Typography.H1 style={{ display: 'flex', justifyContent: 'center', margin: '8px 0px' }}>Spotcity</Typography.H1>
+    <SpotsMap style={{ flexGrow: 1 }} />
+  </>
+)
