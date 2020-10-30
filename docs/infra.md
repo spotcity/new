@@ -1,25 +1,24 @@
 # Overview
-- Setup digitalocean droplet via Terraform + Ansible
-- Github Actions as CI/CD
+- [ ] Setup digitalocean or GCP via Terraform + Ansible
+- [x] Github Actions as CI/CD
   - push to dev = update latest img, deploy dev env
   - push tag = update tag img, deploy prod env
-- Monitoring
-  - prom + grafana (https://landing.google.com/sre/sre-book/chapters/monitoring-distributed-systems/)
-  - kafka + elk (as proof of integration)
-  - sentry?
-- Proxy/Review branches
-  - traefik (envoy?)
+- [ ] Monitoring
+  - [ ] prom + grafana (https://landing.google.com/sre/sre-book/chapters/monitoring-distributed-systems/)
+  - [ ] kafka + elk (as proof of integration)
+  - [ ] sentry?
+- [ ] Proxy/Review branches
 
 
 # TODO: DEBT
 
 ## github-actions
-- stop using third-party ssh-action
-- ssh login as non-root user
+- [ ] stop using third-party ssh-action
+- [ ] ssh login as non-root user
 
 ## host config:
 ```bash
-yum update -y; yum install -y nano git socat httpd-tools epel-release yum-utils
+yum update -y; yum install -y nano htop git socat httpd-tools epel-release yum-utils
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 yum install -y docker-ce docker-ce-cli containerd.io
 systemctl start docker && systemctl enable docker

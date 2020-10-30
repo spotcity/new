@@ -3,6 +3,9 @@
 ![frontend](https://github.com/spotcity/spotcity/workflows/frontend/badge.svg)
 ![api](https://github.com/spotcity/spotcity/workflows/api/badge.svg)
 
+## prepare for the first launch
+1. Create ```.env.secrets``` from ```.env.secrets.template```
+
 ## local env
 ```bash
 # Start app with live reload for both frontend and api
