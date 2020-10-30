@@ -3,10 +3,9 @@
 ![frontend](https://github.com/spotcity/spotcity/workflows/frontend/badge.svg)
 ![api](https://github.com/spotcity/spotcity/workflows/api/badge.svg)
 
-## prepare for the first launch
-1. Create ```.env.secrets``` from [.env.secrets.template](.env.secrets.template)
-
 ## local env
+Create ```.env.secrets``` from [.env.secrets.template](.env.secrets.template)
+
 ```bash
 # Start app with live reload for both frontend and api
 docker-compose -f docker-compose.local.yml up
@@ -21,7 +20,9 @@ docker-compose -f docker-compose.local.yml up --build --renew-anon-volumes
 
 
 ## dev env
-Create [Personal Access Token](https://github.com/settings/tokens) with scope "repo, write:packages".
+- Create [Personal Access Token](https://github.com/settings/tokens) with scope "repo, write:packages".
+- Secrets are filled via Github Actions workflow
+
 ```bash
 docker login https://ghcr.io -u $github_user
 docker-compose -f docker-compose.yml up -d

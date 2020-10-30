@@ -57,8 +57,6 @@ services:
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.rule=Host(`${PROJECT_FQDN}`)
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.tls.certresolver=le
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.entrypoints=websecure
-    env_file:
-      - ./.env.secrets
 
   api:
     image: ghcr.io/${COMPOSE_PROJECT_NAME}/api:${IMAGE_TAG}
