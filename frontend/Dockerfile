@@ -5,8 +5,10 @@ RUN npm install
 
 FROM node:14-alpine as build
 WORKDIR /app
-COPY --from=node_modules /app/node_modules /app/
+COPY --from=node_modules /app/node_modules /app/node_modules
+RUN ls -lah
 COPY ./ /app/
+RUN ls -lah
 RUN npm run build
 
 FROM nginx:1.19-alpine
