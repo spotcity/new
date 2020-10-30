@@ -3,7 +3,7 @@
 ## Quick start using Docker
 ```bash
 # local env (WIP)
-docker build -t spotcity/frontend:local .
+docker build -t spotcity/frontend:local ./frontend
 docker rm -f spotcity_frontend; docker run -p=80:80 -v "$PWD":/app --name spotcity_frontend spotcity/frontend:local
 
 # standalone env
