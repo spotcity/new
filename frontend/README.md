@@ -18,7 +18,7 @@ docker rm -f spotcity_frontend; docker run -d -p=80:80 --name spotcity_frontend 
 ## Prerequisites:
  1. Install [Node](https://nodejs.org/)
  2. Install dependencies by running `npm i`
- 3. For local development, you need to copy `.env.development.local.template` file to `.env.development.local` and modify `DEV_PROXY` environment variable so that it refers to API host (you can declare/override [other environment variables](https://create-react-app.dev/docs/advanced-configuration/) using this file)
+ 3. For local development, you need to copy `.env.development.local.template` file to `.env.development.local` and fill in `DEV_PROXY`/`REACT_APP_GOOGLE_API_KEY` values (you can declare/override [other environment variables](https://create-react-app.dev/docs/advanced-configuration/) using this file)
 
 
 ## Available commands:
