@@ -11,7 +11,6 @@ docker rm -f spotcity_frontend; docker run -d -p=80:80 --name spotcity_frontend 
 
 ```
 
-
 ------------------------
 # Getting started
 
