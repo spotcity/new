@@ -1,0 +1,1 @@
+export { SpotsMap } from './components'
