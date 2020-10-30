@@ -46,7 +46,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      target: build
+      target: node_modules
     entrypoint: ["npm", "run", "start"]
     volumes:
       - "./frontend:/app"
@@ -56,6 +56,8 @@ services:
       DEV_PROXY: http://placeholder:80
       PORT: 80
     stdin_open: true
+    env_file:
+      - ./.env.secrets
 
   api:
     image: ${COMPOSE_PROJECT_NAME}/api:local
