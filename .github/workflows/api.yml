@@ -90,5 +90,6 @@ jobs:
           script: |
             cd spotcity
             git pull
+            git chekout dev
             docker-compose pull $IMAGE_NAME
             docker-compose up -d $IMAGE_NAME
