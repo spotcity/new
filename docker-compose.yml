@@ -48,15 +48,15 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   frontend:
-    image: ghcr.io/${COMPOSE_PROJECT_NAME}/front:${IMAGE_TAG}
+    image: ghcr.io/${COMPOSE_PROJECT_NAME}/frontend:${IMAGE_TAG}
     restart: unless-stopped
     networks:
       - ext
     labels:
       - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.rule=Host(`${PROJECT_FQDN}`)
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.tls.certresolver=le
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-front.entrypoints=websecure
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.rule=Host(`${PROJECT_FQDN}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.tls.certresolver=le
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.entrypoints=websecure
     env_file:
       - ./.env.secrets
 

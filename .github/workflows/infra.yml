@@ -29,7 +29,7 @@ jobs:
           script: |
             cd spotcity
             git pull
-            git chekout dev
+            git checkout dev
             touch acme.json
             chmod 600 acme.json
             docker-compose pull $IMAGE_NAME
