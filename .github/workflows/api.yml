@@ -6,6 +6,7 @@ on:
     branches:
       - dev
     paths:
+      - '.github/workflows/api.yml'
       - 'api/*'
 
     # Publish `v1.2.3` tags as releases.
