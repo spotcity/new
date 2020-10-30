@@ -4,7 +4,7 @@
 ![api](https://github.com/spotcity/spotcity/workflows/api/badge.svg)
 
 ## prepare for the first launch
-1. Create ```.env.secrets``` from ```.env.secrets.template```
+1. Create ```.env.secrets``` from [.env.secrets.template](.env.secrets.template)
 
 ## local env
 ```bash
