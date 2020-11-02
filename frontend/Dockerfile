@@ -5,7 +5,6 @@ RUN npm install
 
 FROM node:14-alpine as build
 WORKDIR /app
-ARG REACT_APP_GOOGLE_API_KEY
 COPY --from=node_modules /app/node_modules /app/node_modules
 COPY ./ /app/
 RUN npm run build

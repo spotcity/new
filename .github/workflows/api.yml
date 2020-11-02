@@ -37,7 +37,7 @@ jobs:
   #         fi
 
   # Build & push to registry
-  push:
+  build:
     #needs: test
 
     runs-on: ubuntu-latest
@@ -76,7 +76,7 @@ jobs:
 
   # Deploy dev environment
   deploy:
-    needs: push
+    needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
