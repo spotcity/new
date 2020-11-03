@@ -2,26 +2,14 @@ from typing import Optional
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 
+from api.routers import api_router
+
 app = FastAPI(
-    root_path="/api",
+    root_path="/",
     title="spotcity api",
     description="Micro-community app based around points of interest in the city",
     version="0.1.1"
 )
-
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Optional[bool] = None
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "name": "Foo",
-                "price": 35.4,
-                "is_offer": True,
-            }
-        }
 
 
 @app.get("/")
@@ -62,11 +50,6 @@ stub_spots = [
 ]
 
 
-@app.get("/spots")
-def get_spots():
-    return stub_spots
-
-
 @app.get("/spots/{item_id}")
 def get_spot(item_id: int):
     try:
@@ -78,3 +61,6 @@ def get_spot(item_id: int):
 @app.get("/spots/handshake")
 def handshake():
     return {"fastapi": "handshake"}
+
+
+app.include_router(api_router)
