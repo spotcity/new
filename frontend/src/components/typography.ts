@@ -17,4 +17,9 @@ const Paragraph = styled.p`
   font-size: 16px;
 `
 
-export const Typography = { H1, H3, Paragraph }
+const Description = styled.p`
+  font-family: system-ui;
+  font-size: 12px;
+`
+
+export const Typography = { H1, H3, Paragraph, Description }
