@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { Marker, Spinner } from 'components'
 import { useDimensions } from 'hooks'
+import { GOOGLE_API_KEY } from 'app-constants'
 
 import { $spots, getSpots, googleMapApiIsLoaded, spotSelected } from '../model'
 
@@ -33,7 +34,7 @@ export const SpotsMap: React.FC<TProps> = ({ style }) => {
       <div style={{ width: dimensions.width, height: dimensions.height }}>
         {dimensions.ready && (
           <GoogleMapReact
-            bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY as string }}
+            bootstrapURLKeys={{ key: GOOGLE_API_KEY as string }}
             // TODO: calculate initial center/zoom
             center={{ lat: 59.955413, lng: 30.337844 }}
             onGoogleApiLoaded={googleMapApiIsLoaded}
