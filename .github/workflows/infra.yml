@@ -3,6 +3,8 @@ name: infra
 # Run when detected changes are outside of /api, /frontend
 on:
   push:
+    branches:
+      - dev
     paths-ignore:
       - 'docs/**'
       - 'api/**'
