@@ -23,7 +23,7 @@ services:
       - --log
       - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${TRAEFIK_TAG?Variable not set}`)
       # lels
-      - --certificatesresolvers.le.acme.email=admin@${$APP_DOMAIN?Variable not set}
+      - --certificatesresolvers.le.acme.email=admin@${APP_DOMAIN?Variable not set}
       - --certificatesresolvers.le.acme.storage=/acme.json
       - --certificatesresolvers.le.acme.tlschallenge=true
       # metrics
