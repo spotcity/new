@@ -1,14 +1,16 @@
-import { createEffect, combine, createEvent, forward, restore } from 'effector'
-import { createRequestState, combineEvents } from 'utils'
+import { combine, createEvent, forward, restore } from 'effector'
+import { createReEffect, TAKE_LAST } from 'effector-reeffect'
+import { createRequestState, combineEvents } from 'lib/effector'
 
 import * as api from './api'
 
-export const getSpots = createEffect(api.getSpots)
-const spotsRequest = createRequestState(getSpots)
+// Map
+export const getSpotsFx = createReEffect({ handler: api.getSpots, strategy: TAKE_LAST })
+const spotsRequest = createRequestState(getSpotsFx)
 export const $spots = combine({ data: spotsRequest.$data, isLoading: spotsRequest.$isLoading })
 
 export const googleMapApiIsLoaded = createEvent<any>()
-const mapIsReady = combineEvents({ googleApi: googleMapApiIsLoaded, spots: getSpots.doneData }, false)
+const mapIsReady = combineEvents({ googleApi: googleMapApiIsLoaded, spots: getSpotsFx.doneData }, false)
 
 mapIsReady.watch(({ googleApi, spots }) => {
   const bounds = new googleApi.maps.LatLngBounds()
@@ -16,12 +18,13 @@ mapIsReady.watch(({ googleApi, spots }) => {
   googleApi.map.fitBounds(bounds)
 })
 
+// Spot info
 export const spotSelected = createEvent<number>()
 export const spotInfoClosed = createEvent()
 export const $selectedSpot = restore(spotSelected, null).reset(spotInfoClosed)
 
-const getSpot = createEffect(api.getSpot)
-forward({ from: spotSelected, to: getSpot })
+const getSpotFx = createReEffect({ handler: api.getSpot, strategy: TAKE_LAST })
+forward({ from: spotSelected, to: getSpotFx })
 
-const spotRequest = createRequestState(getSpot)
+const spotRequest = createRequestState(getSpotFx)
 export const $spot = combine({ data: spotRequest.$data, isLoading: spotRequest.$isLoading })

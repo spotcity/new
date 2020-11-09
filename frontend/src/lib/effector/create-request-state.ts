@@ -1,4 +1,5 @@
 import { createStore, Effect } from 'effector'
+import { ReEffect } from 'effector-reeffect'
 
 enum Status {
   Initial,
@@ -7,9 +8,9 @@ enum Status {
   Fail,
 }
 
-type TEffectData<T> = T extends Effect<any, infer D, any> ? D : never
+type TEffectData<T> = T extends Effect<any, infer D, any> | ReEffect<any, infer D, any> ? D : never
 
-export const createRequestState = <T extends Effect<any, any, any>>(effect: T) => {
+export const createRequestState = <T extends Effect<any, any, any> | ReEffect<any, any, any>>(effect: T) => {
   const $status = createStore(Status.Initial)
     .on(effect, () => Status.Loading)
     .on(effect.done, () => Status.Done)
