@@ -41,7 +41,7 @@ export const SpotsMap: React.FC<TProps> = ({ style }) => {
             yesIWantToUseGoogleMapApiInternals={true}
             zoom={11}
           >
-            {data?.map(({ id, latitude, longitude, name }) => (
+            {data?.map(({ id, latitude, longitude }) => (
               <Marker key={id} lat={latitude} lng={longitude} onClick={() => spotSelected(id)} />
             ))}
           </GoogleMapReact>

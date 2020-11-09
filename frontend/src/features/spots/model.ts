@@ -1,5 +1,7 @@
-import { combine, createEvent, forward, restore } from 'effector'
+import { combine, createEvent, restore } from 'effector'
 import { createReEffect, TAKE_LAST } from 'effector-reeffect'
+import { isNil } from 'ramda'
+
 import { createRequestState, combineEvents } from 'lib/effector'
 
 import * as api from './api'
@@ -24,7 +26,12 @@ export const spotInfoClosed = createEvent()
 export const $selectedSpot = restore(spotSelected, null).reset(spotInfoClosed)
 
 const getSpotFx = createReEffect({ handler: api.getSpot, strategy: TAKE_LAST })
-forward({ from: spotSelected, to: getSpotFx })
+
+$selectedSpot.updates.watch(id => {
+  if (!isNil(id)) {
+    getSpotFx(id)
+  }
+})
 
 const spotRequest = createRequestState(getSpotFx)
 export const $spot = combine({ data: spotRequest.$data, isLoading: spotRequest.$isLoading })
