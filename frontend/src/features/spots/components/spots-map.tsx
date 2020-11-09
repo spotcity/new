@@ -4,10 +4,10 @@ import GoogleMapReact from 'google-map-react'
 import styled from 'styled-components'
 
 import { Marker, Spinner } from 'components'
-import { useDimensions } from 'hooks'
+import { useDimensions } from 'lib/hooks'
 import { GOOGLE_API_KEY } from 'app-constants'
 
-import { $spots, getSpots, googleMapApiIsLoaded, spotSelected } from '../model'
+import { $spots, getSpotsFx, googleMapApiIsLoaded, spotSelected } from '../model'
 
 import { SpotInfo } from './spot-info'
 
@@ -20,7 +20,7 @@ export const SpotsMap: React.FC<TProps> = ({ style }) => {
   const [ref, dimensions] = useDimensions<HTMLDivElement>()
 
   useEffect(() => {
-    getSpots()
+    getSpotsFx()
   }, [])
 
   const spinner = isLoading && (
