@@ -1,4 +1,4 @@
-import { createStore, Effect } from 'effector'
+import { createStore, Effect, combine } from 'effector'
 import { ReEffect } from 'effector-reeffect'
 
 enum Status {
@@ -32,12 +32,12 @@ export const createRequestState = <T extends Effect<any, any, any> | ReEffect<an
   const $isDone = $status.map(v => v === Status.Done)
   const $isFail = $status.map(v => v === Status.Fail)
 
-  return {
-    $data,
-    $error,
-    $isInitial,
-    $isLoading,
-    $isDone,
-    $isFail,
-  }
+  return combine({
+    data: $data,
+    error: $error,
+    isInitial: $isInitial,
+    isLoading: $isLoading,
+    isDone: $isDone,
+    issFail: $isFail,
+  })
 }
