@@ -1,18 +1,17 @@
 import { Event, createStore, guard, sample, merge, createEvent } from 'effector'
 import { forEachObjIndexed } from 'ramda'
 
-type TEventMap = {
-  [K: string]: Event<any>
+type TEventsMap<T> = {
+  [K in keyof T]: Event<T[K]>
 }
 
-type TPayloadsMap<T extends TEventMap> = {
-  [K in keyof T]: Parameters<T[K]>[0]
-}
-
-export const combineEvents = <T extends TEventMap>(eventsMap: T, repeatable: boolean = true) => {
+export const combineEvents = <T extends Record<string, unknown>>(
+  eventsMap: TEventsMap<T>,
+  repeatable: boolean = true,
+) => {
   const $firedEvents = createStore(0)
-  const $payloads = createStore({} as TPayloadsMap<T>)
-  const allEventsFired = createEvent<TPayloadsMap<T>>()
+  const $payloads = createStore({} as T)
+  const allEventsFired = createEvent<T>()
 
   if (repeatable) {
     $firedEvents.reset(allEventsFired)
@@ -36,5 +35,5 @@ export const combineEvents = <T extends TEventMap>(eventsMap: T, repeatable: boo
   const eventFired = sample({ source: $payloads, clock: merge(events) })
   const $allEventsFired = $firedEvents.map(v => v === events.length)
 
-  return guard({ source: eventFired, filter: $allEventsFired, target: allEventsFired }) as Event<TPayloadsMap<T>>
+  return guard({ source: eventFired, filter: $allEventsFired, target: allEventsFired }) as Event<T>
 }

@@ -5,13 +5,16 @@ import styled from 'styled-components'
 
 import { Spinner, Typography } from 'components'
 
-import { $spot, $selectedSpot, spotInfoClosed } from '../model'
+import { $spot, spotInfoClosed } from '../model'
 
-export const SpotInfo = () => {
+type TProps = {
+  id?: number
+}
+
+export const SpotInfo: React.FC<TProps> = ({ id }) => {
   const { data, isLoading } = useStore($spot)
-  const selectedSpot = useStore($selectedSpot)
 
-  if (isNil(selectedSpot)) {
+  if (isNil(id)) {
     return null
   }
 
@@ -27,7 +30,7 @@ export const SpotInfo = () => {
   // TODO: TS-ignore
   return (
     <Container>
-      <Typography.H3 style={{ marginBottom: '16px' }}>Spot {selectedSpot}</Typography.H3>
+      <Typography.H3 style={{ marginBottom: '16px' }}>Spot {id}</Typography.H3>
       {/* @ts-ignore */}
       <CloseButton onClick={spotInfoClosed}>x</CloseButton>
       {isLoading ? <Spinner /> : spotInfoBlock}

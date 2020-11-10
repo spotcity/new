@@ -7,7 +7,7 @@ import { Marker, Spinner } from 'components'
 import { useDimensions } from 'lib/hooks'
 import { GOOGLE_API_KEY } from 'app-constants'
 
-import { $spots, getSpotsFx, googleMapApiIsLoaded, spotSelected } from '../model'
+import { $selectedSpot, $spots, getSpotsFx, googleMapApiIsLoaded, spotSelected } from '../model'
 
 import { SpotInfo } from './spot-info'
 
@@ -15,9 +15,14 @@ type TProps = {
   style?: React.CSSProperties
 }
 
+const mapOptions = { clickableIcons: false }
+const mapKeys = { key: GOOGLE_API_KEY as string }
+const defaultMapCenter = { lat: 59.955413, lng: 30.337844 }
+
 export const SpotsMap: React.FC<TProps> = ({ style }) => {
   const { data, isLoading } = useStore($spots)
   const [ref, dimensions] = useDimensions<HTMLDivElement>()
+  const selectedSpot = useStore($selectedSpot)
 
   useEffect(() => {
     getSpotsFx()
@@ -29,26 +34,38 @@ export const SpotsMap: React.FC<TProps> = ({ style }) => {
     </Overlay>
   )
 
+  const markers = data?.map(spot => {
+    const { id, latitude, longitude } = spot
+    return (
+      <Marker
+        key={id}
+        lat={latitude}
+        lng={longitude}
+        isActive={id === selectedSpot?.id}
+        onClick={() => spotSelected(spot)}
+      />
+    )
+  })
+
   return (
     <Container style={style} ref={ref}>
       <div style={{ width: dimensions.width, height: dimensions.height }}>
         {dimensions.ready && (
           <GoogleMapReact
-            bootstrapURLKeys={{ key: GOOGLE_API_KEY as string }}
+            bootstrapURLKeys={mapKeys}
             // TODO: calculate initial center/zoom
-            center={{ lat: 59.955413, lng: 30.337844 }}
+            defaultCenter={defaultMapCenter}
             onGoogleApiLoaded={googleMapApiIsLoaded}
             yesIWantToUseGoogleMapApiInternals={true}
-            zoom={11}
+            defaultZoom={11}
+            options={mapOptions}
           >
-            {data?.map(({ id, latitude, longitude }) => (
-              <Marker key={id} lat={latitude} lng={longitude} onClick={() => spotSelected(id)} />
-            ))}
+            {markers}
           </GoogleMapReact>
         )}
       </div>
       {spinner}
-      <SpotInfo />
+      <SpotInfo id={selectedSpot?.id} />
     </Container>
   )
 }

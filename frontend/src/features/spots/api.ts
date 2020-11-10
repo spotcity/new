@@ -1,12 +1,14 @@
 import { request } from 'features/core'
 
+import type { TSpot } from './types'
+
 type TRawSpot = {
   geo?: string
   id: number
   name?: string
 }
 
-const processSpot = ({ id, geo, name }: TRawSpot) => {
+const processSpot = ({ id, geo, name }: TRawSpot): TSpot => {
   const [latitude, longitude] = geo?.split(', ') || []
   return { id, name, latitude: parseFloat(latitude), longitude: parseFloat(longitude) }
 }
