@@ -36,6 +36,8 @@ services:
   frontend:
     image: ${COMPOSE_PROJECT_NAME}/frontend:local
     restart: unless-stopped
+    ports:
+      - "7000:80"
     networks:
       - ext
     labels:
@@ -62,6 +64,8 @@ services:
   api:
     image: ${COMPOSE_PROJECT_NAME}/api:local
     restart: unless-stopped
+    ports:
+      - "8000:8000"
     networks:
       - ext
     labels:
