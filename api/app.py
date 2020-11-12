@@ -6,7 +6,7 @@ app = FastAPI(
     root_path="/api",
     title="spotcity api",
     description="Micro-community app based around points of interest in the city",
-    version="0.1.0"
+    version="0.1.1"
 )
 
 class Item(BaseModel):
