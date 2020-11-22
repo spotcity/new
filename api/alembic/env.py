@@ -30,7 +30,7 @@ target_metadata = Base.metadata
 
 
 def get_url():
-    return 'sqlite:///./data/test.db'
+    return 'sqlite:///./data/example.db'
 
 
 def run_migrations_offline():

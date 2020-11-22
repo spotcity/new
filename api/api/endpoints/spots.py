@@ -20,9 +20,22 @@ def read_spots(
     """
     Retrieve spots.
     """
-    users = crud.spot.get_multi(db, skip=skip, limit=limit)
-    return users
+    items = crud.spot.get_multi(db, skip=skip, limit=limit)
+    return items
 
+
+@router.get("/spots/{item_id}", response_model=schemas.Spot)
+def read_spot(
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    """
+    Retrieve spot.
+    """
+    try:
+        items = crud.spot.get(db, id=item_id)
+        return items
+    except IndexError:
+        return {"Error": "No spot found with such id"}
 
 @router.post("/", response_model=schemas.Spot)
 def create_spot(
@@ -34,5 +47,5 @@ def create_spot(
     Create new spot.
     """
     # ДОБАВИТЬ ПРОВЕРКУ НА СУЩЕСТВОВАНИЕ ТАКОЙ ТОЧКИ
-    user = crud.spot.create(db, obj_in=spot_in)
-    return user
+    item = crud.spot.create(db, obj_in=spot_in)
+    return item
