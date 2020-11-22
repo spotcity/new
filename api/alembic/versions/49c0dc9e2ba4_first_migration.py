@@ -1,8 +1,8 @@
-"""create tables 2
+"""first migration
 
-Revision ID: f3e53eec9898
-Revises: 05b2b099a6b3
-Create Date: 2020-11-03 19:56:06.400042
+Revision ID: 49c0dc9e2ba4
+Revises: 
+Create Date: 2020-11-22 16:23:35.654314
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f3e53eec9898'
-down_revision = '05b2b099a6b3'
+revision = '49c0dc9e2ba4'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -23,8 +23,7 @@ def upgrade():
     sa.Column('name', sa.String(length=32), nullable=False),
     sa.Column('latitude', sa.Numeric(), nullable=True),
     sa.Column('longitude', sa.Numeric(), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_spots_id'), 'spots', ['id'], unique=False)
     op.create_index(op.f('ix_spots_latitude'), 'spots', ['latitude'], unique=False)

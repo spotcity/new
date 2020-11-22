@@ -8,6 +8,6 @@ class Spot(Base):
     __tablename__ = 'spots'
     
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(32), nullable=False, unique=True)
+    name = Column(String(32), nullable=False)
     latitude = Column(Numeric, index=True)
     longitude = Column(Numeric, index=True)
