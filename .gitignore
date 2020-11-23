@@ -30,5 +30,6 @@ override.tf.json
 
 # Deployment
 acme.json
-.env.secrets
 .env
+.env.secrets
+

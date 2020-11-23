@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
   proxy:
@@ -21,7 +21,7 @@ services:
       - --api
       - --accesslog
       - --log
-      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${TRAEFIK_TAG?Variable not set}`)
+      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${COMPOSE_PROJECT_NAME?Variable not set}`)
       # lels
       - --certificatesresolvers.le.acme.email=admin@${APP_DOMAIN?Variable not set}
       - --certificatesresolvers.le.acme.storage=/acme.json
@@ -33,7 +33,7 @@ services:
       - --metrics.prometheus.addEntryPointsLabels=true
       - --metrics.prometheus.addServicesLabels=true
     labels:
-      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.constraint-label-stack=${COMPOSE_PROJECT_NAME?Variable not set}
       # dashboard
       - "traefik.http.routers.traefik.rule=Host(`lb.${APP_FQDN?Variable not set}`)"
       - "traefik.http.routers.traefik.service=api@internal"
@@ -53,7 +53,7 @@ services:
     networks:
       - ext
     labels:
-      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.constraint-label-stack=${COMPOSE_PROJECT_NAME?Variable not set}
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.rule=Host(`${APP_FQDN?Variable not set}`)
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.tls.certresolver=le
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-frontend.entrypoints=websecure
@@ -64,7 +64,7 @@ services:
     networks:
       - ext
     labels:
-      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.constraint-label-stack=${COMPOSE_PROJECT_NAME?Variable not set}
       # serve /api & strip /api
       - traefik.http.routers.${COMPOSE_PROJECT_NAME}-api.rule=Host(`${APP_FQDN?Variable not set}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))
       - traefik.http.middlewares.stripapi.stripprefix.prefixes=/api
