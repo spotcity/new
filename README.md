@@ -8,7 +8,7 @@ Micro-community app based around points of interest in the city
 ## local env
 1. Create ```.env.secrets``` from [.env.secrets.template](.env.secrets.template)
 2. ```./local.sh --start```     # Start app with live reload for both frontend and api
-3. Check out URL's
+3. Check out URLs
    - http://localhost/
    - http://localhost/api
    - http://localhost/docs & http://localhost/redoc
