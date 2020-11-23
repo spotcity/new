@@ -23,19 +23,16 @@ def read_spots(
     items = crud.spot.get_multi(db, skip=skip, limit=limit)
     return items
 
-
-@router.get("/spots/{item_id}", response_model=schemas.Spot)
+@router.get("/{item_id}", response_model=schemas.Spot)
 def read_spot(
+    item_id: int,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     """
     Retrieve spot.
     """
-    try:
-        items = crud.spot.get(db, id=item_id)
-        return items
-    except IndexError:
-        return {"Error": "No spot found with such id"}
+    items = crud.spot.get(db, id=item_id)
+    return items
 
 @router.post("/", response_model=schemas.Spot)
 def create_spot(

@@ -77,7 +77,7 @@ services:
       - traefik.http.services.${COMPOSE_PROJECT_NAME}-api.loadbalancer.server.port=${API_PORT}
     # build & live reload
     build: ./api
-    entrypoint: [ "uvicorn", "app:app", "--host", "0.0.0.0", "--reload" ]
+    entrypoint: [ "uvicorn", "app:app", "--host", "0.0.0.0", "--reload", "--log-level", "debug"]
     volumes:
       - "./api:/app"
 

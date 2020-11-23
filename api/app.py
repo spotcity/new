@@ -19,12 +19,4 @@ app = FastAPI(
 def read_root(request: Request):
     return {"message": "Hello World!", "root_path": request.scope.get("root_path")}
 
-# @app.get("/spots/{item_id}")
-# def get_spot(item_id: int):
-#     try:
-#         return stub_spots[item_id]
-#     except IndexError:
-#         return {"Error": "No spot found with such id"}
-
-
 app.include_router(api_router)
