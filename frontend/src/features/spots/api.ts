@@ -2,31 +2,6 @@ import { request } from 'features/core'
 
 import type { TSpot } from './types'
 
-type TRawSpot = {
-  geo?: string
-  id: number
-  name?: string
-}
+export const getSpot = (id: number) => request.get<TSpot>(`/api/spots/${id}`).catch(() => null)
 
-const processSpot = ({ id, geo, name }: TRawSpot): TSpot => {
-  const [latitude, longitude] = geo?.split(', ') || []
-  return { id, name, latitude: parseFloat(latitude), longitude: parseFloat(longitude) }
-}
-
-export const getSpot = async (id: number) => {
-  try {
-    const rawSpot = await request.get<TRawSpot>(`/api/spots/${id}`)
-    return processSpot(rawSpot)
-  } catch (e) {
-    return null
-  }
-}
-
-export const getSpots = async () => {
-  try {
-    const rawSpots = await request.get<TRawSpot[]>('/api/spots')
-    return rawSpots.map(processSpot)
-  } catch (e) {
-    return []
-  }
-}
+export const getSpots = async () => request.get<TSpot[]>('/api/spots').catch(() => [] as TSpot[])
