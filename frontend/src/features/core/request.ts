@@ -1,7 +1,14 @@
 import ky from 'ky'
 
+const API_PREFIX = '/api'
+
 // TODO: error handling
-const get = <T>(...args: Parameters<typeof ky.get>) => ky.get(...args).json<T>()
-const post = <T>(...args: Parameters<typeof ky.post>) => ky.post(...args).json<T>()
+const handleError = (error: any) => {
+  console.error(error)
+  throw error
+}
+
+const get = <T>(url: string) => ky.get(`${API_PREFIX}${url}`).json<T>().catch(handleError)
+const post = <T>(url: string) => ky.post(`${API_PREFIX}${url}`).json<T>().catch(handleError)
 
 export const request = { get, post }

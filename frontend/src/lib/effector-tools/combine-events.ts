@@ -5,27 +5,19 @@ type TEventsMap<T> = {
   [K in keyof T]: Event<T[K]>
 }
 
-export const combineEvents = <T extends Record<string, unknown>>(
-  eventsMap: TEventsMap<T>,
-  repeatable: boolean = true,
-) => {
-  const $firedEvents = createStore(0)
-  const $payloads = createStore({} as T)
-  const allEventsFired = createEvent<T>()
+export const combineEvents = <T extends Record<string, unknown>>(eventsMap: TEventsMap<T>) => {
+  const allEventsFiredRaw = createEvent<T>()
+  const reset = createEvent()
 
-  if (repeatable) {
-    $firedEvents.reset(allEventsFired)
-    $payloads.reset(allEventsFired)
-  } else {
-    $firedEvents.on(allEventsFired, state => state + 1)
-  }
+  const $firedEvents = createStore(0)
+  $firedEvents.reset([allEventsFiredRaw, reset])
+
+  const $payloads = createStore({} as T)
+  $payloads.reset([allEventsFiredRaw, reset])
 
   forEachObjIndexed((event, eventName) => {
     const $isEventFired = createStore(false).on(event, () => true)
-
-    if (repeatable) {
-      $isEventFired.reset(allEventsFired)
-    }
+    $isEventFired.reset([allEventsFiredRaw, reset])
 
     $firedEvents.on($isEventFired, (state, payload) => (payload ? state + 1 : state))
     $payloads.on(event, (state, payload) => ({ ...state, [eventName]: payload }))
@@ -35,5 +27,7 @@ export const combineEvents = <T extends Record<string, unknown>>(
   const eventFired = sample({ source: $payloads, clock: merge(events) })
   const $allEventsFired = $firedEvents.map(v => v === events.length)
 
-  return guard({ source: eventFired, filter: $allEventsFired, target: allEventsFired }) as Event<T>
+  const allEventsFired = guard({ source: eventFired, filter: $allEventsFired, target: allEventsFiredRaw }) as Event<T>
+
+  return [allEventsFired, reset] as const
 }

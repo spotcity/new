@@ -9,17 +9,24 @@ enum Status {
 }
 
 type TEffectData<T> = T extends Effect<any, infer D, any> | ReEffect<any, infer D, any> ? D : never
+type TDataReducer<T> = (data: TEffectData<T> | null, newData: TEffectData<T> | null) => TEffectData<T> | null
 
-export const createRequestState = <T extends Effect<any, any, any> | ReEffect<any, any, any>>(effect: T) => {
+export const createRequestState = <T extends Effect<any, any, any> | ReEffect<any, any, any>>(
+  effect: T,
+  dataReducer?: TDataReducer<T>,
+) => {
   const $status = createStore(Status.Initial)
     .on(effect, () => Status.Loading)
     .on(effect.done, () => Status.Done)
     .on(effect.fail, () => Status.Fail)
 
-  const $data = createStore<TEffectData<T> | null>(null)
-    .reset(effect)
-    .reset(effect.fail)
-    .on(effect.done, (_, { result }) => result)
+  const $data = createStore<TEffectData<T> | null>(null).reset(effect.fail)
+
+  if (!dataReducer) {
+    $data.reset(effect).on(effect.doneData, (_, result) => result)
+  } else {
+    $data.on(effect.doneData, dataReducer)
+  }
 
   const $error = createStore(null)
     .reset(effect)
@@ -38,6 +45,6 @@ export const createRequestState = <T extends Effect<any, any, any> | ReEffect<an
     isInitial: $isInitial,
     isLoading: $isLoading,
     isDone: $isDone,
-    issFail: $isFail,
+    isFail: $isFail,
   })
 }

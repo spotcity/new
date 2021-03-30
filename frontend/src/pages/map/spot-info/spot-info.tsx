@@ -1,20 +1,17 @@
 import React from 'react'
 import { useStore } from 'effector-react'
-import { isNil } from 'ramda'
 import styled from 'styled-components'
 
 import { Spinner, Typography } from 'components'
 
-import { $spot, spotInfoClosed } from '../model'
+import { spotsMapModel } from '../spots-map'
+import { spotInfoModel } from './model'
 
-type TProps = {
-  id?: number
-}
+export const SpotInfo: React.FC = () => {
+  const { data, isLoading } = useStore(spotInfoModel.stores.$spot)
+  const selectedSpotBaseData = useStore(spotsMapModel.stores.$selectedSpotData)
 
-export const SpotInfo: React.FC<TProps> = ({ id }) => {
-  const { data, isLoading } = useStore($spot)
-
-  if (isNil(id)) {
+  if (!selectedSpotBaseData) {
     return null
   }
 
@@ -30,9 +27,9 @@ export const SpotInfo: React.FC<TProps> = ({ id }) => {
   // TODO: TS-ignore
   return (
     <Container>
-      <Typography.H3 style={{ marginBottom: '16px' }}>Spot {id}</Typography.H3>
+      <Typography.H3 style={{ marginBottom: '16px' }}>Spot {selectedSpotBaseData.id}</Typography.H3>
       {/* @ts-ignore */}
-      <CloseButton onClick={spotInfoClosed}>x</CloseButton>
+      <CloseButton onClick={spotsMapModel.signals.spotDeselected}>x</CloseButton>
       {isLoading ? <Spinner /> : spotInfoBlock}
     </Container>
   )
